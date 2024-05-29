@@ -2,6 +2,7 @@ package com.jmarcos.demoparkapi.web.controller;
 
 import com.jmarcos.demoparkapi.entity.Usuario;
 import com.jmarcos.demoparkapi.service.UsuarioService;
+import com.jmarcos.demoparkapi.web.dto.UsuarioCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> create(@RequestBody UsuarioCreateDto createDto){
         Usuario user = usuarioService.salvar(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
