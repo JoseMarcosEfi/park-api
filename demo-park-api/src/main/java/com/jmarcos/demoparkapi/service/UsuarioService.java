@@ -1,6 +1,7 @@
 package com.jmarcos.demoparkapi.service;
 
 import com.jmarcos.demoparkapi.entity.Usuario;
+import com.jmarcos.demoparkapi.exception.UserNameUniqueViolationException;
 import com.jmarcos.demoparkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,13 @@ public class UsuarioService {
 
     @Transactional
      public Usuario salvar(Usuario usuario){
-         return usuarioRepository.save(usuario);
+
+        try {
+            return usuarioRepository.save(usuario);
+        }catch (org.springframework.dao.DataIntegrityViolationException ex){
+            throw new UserNameUniqueViolationException(String.format("Username {%s} já está cadastrado", usuario.getUsername()));
+        }
+
      }
      @Transactional(readOnly = true)
      public Usuario buscarPorId(Long id){
