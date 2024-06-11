@@ -1,5 +1,6 @@
 package com.jmarcos.demoparkapi.web.exception;
 
+import com.jmarcos.demoparkapi.exception.EntityNotFoundException;
 import com.jmarcos.demoparkapi.exception.UserNameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundException(RuntimeException ex,
+                                                                        HttpServletRequest request){
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request,HttpStatus.NOT_FOUND, ex.getMessage()));
+    }
     @ExceptionHandler(UserNameUniqueViolationException.class)
-    public ResponseEntity<ErrorMessage> methodArgumentNotValidException(RuntimeException ex,
+    public ResponseEntity<ErrorMessage> uniqueViolationException(RuntimeException ex,
                                                                         HttpServletRequest request){
         log.error("Api Error - ", ex);
         return ResponseEntity

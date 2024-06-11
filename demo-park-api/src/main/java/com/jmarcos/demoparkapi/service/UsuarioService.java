@@ -1,6 +1,7 @@
 package com.jmarcos.demoparkapi.service;
 
 import com.jmarcos.demoparkapi.entity.Usuario;
+import com.jmarcos.demoparkapi.exception.EntityNotFoundException;
 import com.jmarcos.demoparkapi.exception.UserNameUniqueViolationException;
 import com.jmarcos.demoparkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class UsuarioService {
      @Transactional(readOnly = true)
      public Usuario buscarPorId(Long id){
         return usuarioRepository.findById(id).orElseThrow(
-                ()-> new RuntimeException("Usuário não encontrado")
+                ()-> new EntityNotFoundException(String.format("Usuário id=%s não encontrado", id))
         );
      }
      @Transactional
