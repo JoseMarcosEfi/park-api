@@ -17,12 +17,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 
 @EnableMethodSecurity // habilita a segurança baseada em anotações
 @EnableWebMvc
 @Configuration //indica que a classe é uma classe de configuração
 public class SpringSecurityConfig {
+
+    //liberação do swagger
     private static final String[] DOCUMENTATION_OPENAPI = {
             "/docs/index.html",
             "/docs-estacionamento.html", "/docs-estacionamento/**",
@@ -40,6 +43,15 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth // configura as autorizações
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll() // permite o acesso ao endpoint de cadastro de usuários
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()// permite o acesso a rota de autenticação para qualquer um
+                        .requestMatchers(
+                                antMatcher(HttpMethod.POST, "/api/v1/usuarios"),
+                                antMatcher(HttpMethod.POST, "/api/v1/auth"),
+                                antMatcher("/docs-park.html"),
+                                antMatcher("/docs-park/**"),
+                                antMatcher("/swagger-ui.html"),
+                                antMatcher("/swagger-ui/**"),
+                                antMatcher("/webjars/**")
+                        ).permitAll()
                         .anyRequest().authenticated()// qualquer outra requisição precisa de autenticação
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // configura a política de sessão para stateless
