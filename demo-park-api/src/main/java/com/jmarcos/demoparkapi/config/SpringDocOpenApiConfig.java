@@ -1,5 +1,6 @@
 package com.jmarcos.demoparkapi.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -14,6 +15,7 @@ public class SpringDocOpenApiConfig {
     @Bean
     public OpenAPI openApi(){
         return new OpenAPI()
+                .components(new Components().addSecuritySchemes("security", securityScheme()))
                 .info(
                         new Info()
                                 .title("Rest API - Spring Park")
