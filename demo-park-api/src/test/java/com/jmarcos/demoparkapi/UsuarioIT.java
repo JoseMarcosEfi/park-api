@@ -186,16 +186,18 @@ public class UsuarioIT {
     }
     @Test
     public void buscarUsuario_ComIdExistente_RetornarUsuarioComStatus200() {
-        ErrorMessage responseBody = testClient
+        String responseBody = testClient
                 .get()
                 .uri("/api/v1/usuarios/0")
+                .accept(MediaType.APPLICATION_XML)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(ErrorMessage.class)
+                .expectHeader().contentType(MediaType.APPLICATION_XML)
+                .expectBody(String.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+        org.assertj.core.api.Assertions.assertThat(responseBody).contains("<status>404</status>");
     }
     @Test
     public void editarSenha_ComDadosValidos_RetornarStatus204() {
